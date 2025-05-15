@@ -23,3 +23,7 @@ openmanus:
   storage:
     size: 20Gi
     storageClass: alicloud-disk-topology-alltype 
+  env:
+    OPENAI_BASE_URL: "<YOUR_OPENAI_BASE_URL>"
+    OPENAI_API_KEY: "sk-123456"
+    MODEL_KEY: "qwen-max-latest"

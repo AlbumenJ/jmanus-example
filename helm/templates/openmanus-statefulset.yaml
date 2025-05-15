@@ -24,6 +24,13 @@ spec:
           volumeMounts:
             - name: h2-data
               mountPath: /h2-data
+          env:
+            - name: OPENAI_BASE_URL
+              value: "{{ .Values.openmanus.env.OPENAI_BASE_URL }}"
+            - name: OPENAI_API_KEY
+              value: "{{ .Values.openmanus.env.OPENAI_API_KEY }}"
+            - name: MODEL_KEY
+              value: "{{ .Values.openmanus.env.MODEL_KEY }}"
   volumeClaimTemplates:
     - metadata:
         name: h2-data
