@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: openmanus
+  labels:
+    app: openmanus
+spec:
+  serviceName: openmanus-headless
+  replicas: {{ .Values.openmanus.replicaCount }}
+  selector:
+    matchLabels:
+      app: openmanus
+  template:
+    metadata:
+      labels:
+        app: openmanus
+    spec:
+      containers:
+        - name: openmanus
+          image: "{{ .Values.openmanus.image.repository }}:{{ .Values.openmanus.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.openmanus.service.port }}
+          volumeMounts:
+            - name: h2-data
+              mountPath: /h2-data
+  volumeClaimTemplates:
+    - metadata:
+        name: h2-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.openmanus.storage.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.openmanus.storage.size }} 

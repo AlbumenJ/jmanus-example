@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mcp-demo
+  labels:
+    name: mcp-demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mcp-demo
+  name: mcpo-aliyun
+  labels:
+    app: mcpo-aliyun
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcpo-aliyun
+  template:
+    metadata:
+      labels:
+        app: mcpo-aliyun
+    spec:
+      containers:
+        - name: mcpo-aliyun
+          image: crpi-u3gz1ox11vtovswt.cn-hangzhou.personal.cr.aliyuncs.com/sergo-test/mcpo-aliyun:1.0.1
+          ports:
+            - containerPort: 3000
+          env:
+            - name: ALIBABA_CLOUD_ACCESS_KEY_ID
+              value: "<YOUR_ACCESS_KEY_ID>"
+            - name: ALIBABA_CLOUD_ACCESS_KEY_SECRET
+              value: "<YOUR_ACCESS_KEY_SECRET>"
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: mcp-demo
+  name: mcpo-aliyun-svc
+spec:
+  selector:
+    app: mcpo-aliyun
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: mcp-demo
+  name: openmanus
+  labels:
+    app: openmanus
+spec:
+  serviceName: openmanus-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openmanus
+  template:
+    metadata:
+      labels:
+        app: openmanus
+    spec:
+      containers:
+        - name: openmanus
+          image: crpi-u3gz1ox11vtovswt.cn-hangzhou.personal.cr.aliyuncs.com/sergo-test/openmanus:main-47242883-05132030
+          ports:
+            - containerPort: 18080
+          volumeMounts:
+            - name: h2-data
+              mountPath: /h2-data
+  volumeClaimTemplates:
+    - metadata:
+        name: h2-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: alicloud-disk-topology-alltype
+        resources:
+          requests:
+            storage: 20Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: mcp-demo
+  name: openmanus-lb
+spec:
+  type: LoadBalancer
+  selector:
+    app: openmanus
+  ports:
+    - port: 18080
+      targetPort: 18080

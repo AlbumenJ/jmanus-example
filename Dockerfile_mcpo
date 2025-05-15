@@ -1,0 +1,10 @@
+FROM python:3.13.3
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    git clone https://github.com/aliyun/alibabacloud-observability-mcp-server /alibabacloud-observability-mcp-server && \
+    mkdir /etc/uv
+
+COPY config.json /config.json
+COPY uv.toml /etc/uv/uv.toml
+
+ENTRYPOINT [ "/root/.local/bin/uvx", "mcpo", "--port", "3000", "--config", "/config.json" ]

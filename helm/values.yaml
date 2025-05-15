@@ -1,0 +1,25 @@
+namespace: mcp-demo
+
+mcpoAliyun:
+  image:
+    repository: crpi-u3gz1ox11vtovswt.cn-hangzhou.personal.cr.aliyuncs.com/sergo-test/mcpo-aliyun
+    tag: 1.0.1
+  replicaCount: 2
+  service:
+    type: ClusterIP
+    port: 3000
+  env:
+    accessKeyId: "<YOUR_ACCESS_KEY_ID>"
+    accessKeySecret: "<YOUR_ACCESS_KEY_SECRET>"
+
+openmanus:
+  image:
+    repository: crpi-u3gz1ox11vtovswt.cn-hangzhou.personal.cr.aliyuncs.com/sergo-test/openmanus
+    tag: main-47242883-05132030
+  replicaCount: 1
+  service:
+    type: LoadBalancer
+    port: 18080
+  storage:
+    size: 20Gi
+    storageClass: alicloud-disk-topology-alltype 

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: mcpo-aliyun
+  labels:
+    app: mcpo-aliyun
+spec:
+  replicas: {{ .Values.mcpoAliyun.replicaCount }}
+  selector:
+    matchLabels:
+      app: mcpo-aliyun
+  template:
+    metadata:
+      labels:
+        app: mcpo-aliyun
+    spec:
+      containers:
+        - name: mcpo-aliyun
+          image: "{{ .Values.mcpoAliyun.image.repository }}:{{ .Values.mcpoAliyun.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.mcpoAliyun.service.port }}
+          env:
+            - name: ALIBABA_CLOUD_ACCESS_KEY_ID
+              value: "{{ .Values.mcpoAliyun.env.accessKeyId }}"
+            - name: ALIBABA_CLOUD_ACCESS_KEY_SECRET
+              value: "{{ .Values.mcpoAliyun.env.accessKeySecret }}"
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.mcpoAliyun.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.mcpoAliyun.service.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.mcpoAliyun.service.port }}
+            failureThreshold: 30
+            periodSeconds: 10 

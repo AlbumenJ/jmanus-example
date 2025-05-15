@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "alibaba_cloud_observability": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-aliyun-observability@0.2.5"
+      ]
+    },
+    "rds-openapi-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "alibabacloud-rds-openapi-mcp-server@1.6.3"
+      ]
+    },
+    "alibaba-cloud-ops-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "alibaba-cloud-ops-mcp-server@0.8.6"
+      ]
+    }
+  }
+}

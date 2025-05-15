@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Values.namespace }}
+  name: openmanus-lb
+spec:
+  type: {{ .Values.openmanus.service.type }}
+  selector:
+    app: openmanus
+  ports:
+    - port: {{ .Values.openmanus.service.port }}
+      targetPort: {{ .Values.openmanus.service.port }} 
