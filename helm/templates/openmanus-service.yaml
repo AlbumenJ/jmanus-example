@@ -9,4 +9,4 @@ spec:
     app: openmanus
   ports:
     - port: {{ .Values.openmanus.service.port }}
-      targetPort: {{ .Values.openmanus.service.port }} 
+      targetPort: 18080
