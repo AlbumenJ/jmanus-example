@@ -1,8 +1,13 @@
 namespace: mcp-demo
 
+# 公共 Nacos 配置
+nacos:
+  addr: "<YOUR_NACOS_ADDR>"
+  password: "<YOUR_NACOS_PASSWORD>"
+
 mcpoAliyun:
   image:
-    repository: crpi-u3gz1ox11vtovswt.cn-hangzhou.personal.cr.aliyuncs.com/sergo-test/mcpo-aliyun
+    repository: nacos-registry.cn-hangzhou.cr.aliyuncs.com/mcp-demo/mcpo-aliyun
     tag: 1.0.1
   replicaCount: 2
   service:
@@ -14,8 +19,8 @@ mcpoAliyun:
 
 openmanus:
   image:
-    repository: crpi-u3gz1ox11vtovswt.cn-hangzhou.personal.cr.aliyuncs.com/sergo-test/openmanus
-    tag: main-47242883-05132030
+    repository: nacos-registry.cn-hangzhou.cr.aliyuncs.com/mcp-demo/openmanus
+    tag: main-e2ec8ae7-06101749
   replicaCount: 1
   service:
     type: LoadBalancer
@@ -27,3 +32,19 @@ openmanus:
     OPENAI_BASE_URL: "<YOUR_OPENAI_BASE_URL>"
     OPENAI_API_KEY: "sk-123456"
     MODEL_KEY: "qwen-max-latest"
+
+# Explore 服务配置
+explore:
+  enabled: true
+  image:
+    repository: nacos-registry.cn-hangzhou.cr.aliyuncs.com/mcp-demo/mse-sync
+    tag: explore
+  replicaCount: 1
+
+# Price MCP 服务配置
+priceMcp:
+  enabled: true
+  image:
+    repository: nacos-registry.cn-hangzhou.cr.aliyuncs.com/mcp-demo/mse-sync
+    tag: price-mcp
+  replicaCount: 1

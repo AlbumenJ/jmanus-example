@@ -1,0 +1,50 @@
+{{- if .Values.priceMcp.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mcp-demo.fullname" . }}-price-mcp
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: price-mcp
+    {{- include "mcp-demo.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.priceMcp.replicaCount }}
+  selector:
+    matchLabels:
+      app: price-mcp
+      {{- include "mcp-demo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: price-mcp
+        {{- include "mcp-demo.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: price-mcp
+          image: "{{ .Values.priceMcp.image.repository }}:{{ .Values.priceMcp.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: NACOS_ADDR
+              value: "{{ .Values.nacos.addr }}"
+            - name: NACOS_PASSWORD
+              value: "{{ .Values.nacos.password }}"
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 80
+            failureThreshold: 30
+            periodSeconds: 10
+{{- end }} 

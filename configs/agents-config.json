@@ -1,79 +1,75 @@
 [
-    {
-      "id": "1",
-      "name": "DEFAULT_AGENT",
-      "description": " ",
-      "systemPrompt": " ",
-      "nextStepPrompt": " ",
-      "availableTools": [
-        "terminate"
-      ],
-      "className": "DEFAULT_AGENT"
-    },
-    {
-      "id": "2",
-      "name": "可观测诊断",
-      "description": "诊断阿里云 ARMS 应用情况，包括 ARMS 应用运行指标、热点图分析等",
-      "systemPrompt": "你需要运用已有的工具进行资源巡检，你需要遵循以下的步骤：\n1. 根据用户指定的信息找到对应的 ARMS 应用\n2. 按照用户的指令执行对应的数据采集\n\n当你需要获取可观测指标时，不要自己创造指标信息，需要使用 observability_tool_arms_generate_trace_query_post 来生成诊断的语句",
-      "nextStepPrompt": " ",
-      "availableTools": [
-        "observability_tool_cms_translate_text_to_promql_post",
-        "observability_tool_arms_error_trace_analysis_post",
-        "observability_tool_sls_execute_sql_query_post",
-        "observability_tool_arms_profile_flame_analysis_post",
-        "observability_tool_arms_search_apps_post",
-        "observability_tool_arms_slow_trace_analysis_post",
-        "observability_tool_arms_trace_quality_analysis_post",
-        "observability_tool_sls_list_logstores_post",
-        "observability_tool_sls_get_current_time_post",
-        "observability_tool_arms_diff_profile_flame_analysis_post",
-        "observability_tool_sls_get_regions_post",
-        "observability_tool_arms_generate_trace_query_post",
-        "observability_tool_sls_translate_text_to_sql_query_post",
-        "observability_tool_sls_diagnose_query_post",
-        "observability_tool_sls_describe_logstore_post",
-        "observability_tool_arms_get_application_info_post",
-        "observability_tool_sls_list_projects_post",
-        "terminate"
-      ],
-      "className": "可观测诊断"
-    },
-    {
-      "id": "3",
-      "name": "ECS 诊断",
-      "description": "诊断阿里云 ECS 情况，包括 CPU、内存、磁盘等水位情况",
-      "systemPrompt": "你需要运用已有的工具进行资源巡检，你需要遵循以下的步骤：\n1. 根据用户指定的信息找到对应的 ECS\n2. 按照用户的指令执行对应的数据分析\n\n注意，你可能需要对很多个实例进行分析\n\n你需要使用 ops_tool_DescribeInstances_post 来获取 ECS 的 id 信息",
-      "nextStepPrompt": " ",
-      "availableTools": [
-        "ops_tool_GetCpuUsageData_post",
-        "ops_tool_GetDiskUsageData_post",
-        "ops_tool_DescribeZones_post",
-        "ops_tool_DescribeInstances_post",
-        "ops_tool_DescribeRegions_post",
-        "ops_tool_GetMemUsageData_post",
-        "ops_tool_GetDiskUsedData_post",
-        "ops_tool_GetCpuloadavg5mData_post",
-        "ops_tool_GetDiskTotalData_post",
-        "ops_tool_GetCpuLoadavgData_post",
-        "terminate"
-      ],
-      "className": "ECS 诊断"
-    },
-    {
-      "id": "4",
-      "name": "RDS 诊断",
-      "description": "诊断阿里云 RDS 情况，包括性能水位、慢 SQL 和异常日志",
-      "systemPrompt": "你是一个阿里云 RDS 诊断 Agent，你可以诊断性能水位、慢 SQL 和异常日志。在你需要分析历史信息时，你需要先使用时间工具获取当前实现，然后分析过去 7 天异常情况。",
-      "nextStepPrompt": " ",
-      "availableTools": [
-        "rds_tool_describe_slow_log_records_post",
-        "rds_tool_describe_db_instance_performance_post",
-        "rds_tool_describe_db_instance_parameters_post",
-        "rds_tool_describe_error_logs_post",
-        "rds_tool_describe_db_instances_post",
-        "rds_tool_get_current_time_post",
-        "terminate"
-      ],
-      "className": "RDS 诊断"
-    }
-  ]
+  {
+    "id": "1",
+    "name": "DEFAULT_AGENT",
+    "description": "你是一个默认的 Agent，仅能进行普通的文本判断",
+    "systemPrompt": "",
+    "nextStepPrompt": "你是一个默认的 Agent，仅能进行普通的文本判断",
+    "availableTools": [
+      "terminate"
+    ],
+    "className": "DEFAULT_AGENT"
+  },
+  {
+    "id": "2",
+    "name": "EXPLORE_AGENT",
+    "description": "你可以根据标签找到对应的商品类名。",
+    "systemPrompt": "",
+    "nextStepPrompt": "你需要准确的使用工具，标签目前仅支持“露营”，最终通过 terminate 工具输出商品名",
+    "availableTools": [
+      "terminate",
+      "explore_explore"
+    ],
+    "className": "EXPLORE_AGENT"
+  },
+  {
+    "id": "3",
+    "name": "PRICE_AGENT",
+    "description": "你可以根据传入的商品类名，返回查找到的每个平台的该类商品的最低价格以及对应的商品名称和链接，并额外给出这些不同平台的商品中价格最低的以及价格最高的商品列表，以及这些商品的最低价和最高价",
+    "systemPrompt": "",
+    "nextStepPrompt": "你需要准确的使用工具，如果工具返回为空则忽略对应的商品",
+    "availableTools": [
+      "price_mcp_server_ComparePrice",
+      "terminate"
+    ],
+    "className": "PRICE_AGENT"
+  },
+  {
+    "id": "4",
+    "name": "ECS_AGENT",
+    "description": "诊断阿里云 ECS 情况，包括 CPU、内存、磁盘等水位情况",
+    "systemPrompt": "",
+    "nextStepPrompt": "你需要运用已有的工具进行资源巡检，你需要遵循以下的步骤：\n1. 根据用户指定的信息找到对应的 ECS\n2. 按照用户的指令执行对应的数据分析\n\n注意，你可能需要对很多个实例进行分析\n\n你需要使用 ops_tool_DescribeInstances_post 来获取 ECS 的 id 信息",
+    "availableTools": [
+      "aliyun_ops_tool_GetCpuloadavg5mData_post",
+      "aliyun_ops_tool_DescribeZones_post",
+      "aliyun_ops_tool_GetDiskTotalData_post",
+      "aliyun_ops_tool_GetCpuLoadavgData_post",
+      "aliyun_ops_tool_GetCpuUsageData_post",
+      "aliyun_ops_tool_GetDiskUsageData_post",
+      "aliyun_ops_tool_DescribeRegions_post",
+      "aliyun_ops_tool_DescribeInstances_post",
+      "aliyun_ops_tool_GetMemUsageData_post",
+      "aliyun_ops_tool_GetDiskUsedData_post",
+      "terminate"
+    ],
+    "className": "ECS_AGENT"
+  },
+  {
+    "id": "5",
+    "name": "RDS_AGENT",
+    "description": "诊断阿里云 RDS 情况，包括性能水位、慢 SQL 和异常日志",
+    "systemPrompt": "",
+    "nextStepPrompt": "你是一个阿里云 RDS 诊断 Agent，你可以诊断性能水位、慢 SQL 和异常日志。在你需要分析历史信息时，你需要先使用时间工具获取当前实现，然后分析过去 7 天异常情况。",
+    "availableTools": [
+      "rds_tool_describe_slow_log_records_post",
+      "rds_tool_describe_db_instance_performance_post",
+      "rds_tool_describe_db_instance_parameters_post",
+      "rds_tool_describe_error_logs_post",
+      "rds_tool_describe_db_instances_post",
+      "rds_tool_get_current_time_post",
+      "terminate"
+    ],
+    "className": "RDS_AGENT"
+  }
+]
